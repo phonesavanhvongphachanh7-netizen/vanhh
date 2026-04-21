@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Special One ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+Lao:wght@400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Lao', sans-serif;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            overflow: hidden; /* ປ້ອງກັນບໍ່ໃຫ້ມີ Scroll bar ເວລາປຸ່ມໂດດໜີ */
+            height: 100vh;
+            width: 100vw;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .heart {
+            position: fixed;
+            bottom: -10%;
+            color: #ff85a2;
+            pointer-events: none;
+            animation: float linear infinite;
+        }
+        #noBtn {
+            transition: all 0.2s ease-out;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div id="heart-container"></div>
+
+    <main id="mainCard" class="glass-card relative z-10 w-full max-w-md p-10 rounded-[40px] text-center">
+        <div class="mb-6 flex justify-center">
+            <div class="p-4 bg-white rounded-full shadow-inner">
+                <i data-lucide="heart" class="w-12 h-12 text-pink-500 fill-pink-500 animate-pulse"></i>
+            </div>
+        </div>
+
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">ຕັ້ງແຕ່ຮູ້ຈັກກັນມາ...</h1>
+        <p class="text-gray-600 text-lg mb-10 leading-relaxed">
+            ເຈົ້າຮູ້ສຶກດີກັບເຮົາບໍ່? ❤️
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center min-h-[150px]">
+            <button id="yesBtn" class="px-10 py-4 bg-pink-500 text-white font-bold rounded-2xl shadow-lg hover:scale-110 transition-transform">
+                ຮູ້ສຶກດີຫຼາຍ ❤️
+            </button>
+            
+            <button id="noBtn" class="px-8 py-4 bg-gray-200 text-gray-600 font-medium rounded-2xl border border-gray-300">
+                ບໍ່ຮູ້ສຶກຫຍັງ 🙄
+            </button>
+        </div>
+
+        <div id="successMessage" class="hidden mt-8 p-6 bg-pink-50 rounded-2xl border border-pink-100">
+            <p class="text-3xl text-pink-600 font-serif mb-2">I Love You!</p>
+            <p class="text-gray-600">ຂອບໃຈເດີ້ທີ່ເຂົ້າມາເປັນຄວາມສຸກໃຫ້ເຮົາ</p>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const successMessage = document.getElementById('successMessage');
+        let scale = 1;
+        let noClickCount = 0;
+
+        function moveButton() {
+            // ຄິດໄລ່ຂອບເຂດທີ່ປຸ່ມສາມາດໂດດໄປໄດ້ (ບໍ່ໃຫ້ກາຍຂອບຈໍ)
+            const padding = 50;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        noBtn.addEventListener('click', () => {
+            noClickCount++;
+            
+            // 1. ໃຫ້ມັນໂດດໜີ
+            moveButton();
+
+            // 2. ໃຫ້ມັນນ້ອຍລົງເທື່ອລະ 15%
+            scale -= 0.15;
+            noBtn.style.transform = `scale(${scale})`;
+
+            // 3. ຖ້າກົດຮອດ 6 ເທື່ອ ໃຫ້ຫາຍໄປເລີຍ
+            if (scale <= 0.2) {
+                noBtn.style.display = 'none';
+            }
+        });
+
+        // ເພີ່ມໃຫ້ມັນໂດດໜີເວລາເອົາເມົ້າໄປຈໍ່ (ສຳລັບຄອມ)
+        noBtn.addEventListener('mouseenter', () => {
+            if (scale > 0.3) moveButton();
+        });
+
+        yesBtn.addEventListener('click', () => {
+            successMessage.classList.remove('hidden');
+            yesBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+            createCelebration();
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.getElementById('heart-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 400);
+
+        function createCelebration() {
+            for(let i=0; i<30; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
